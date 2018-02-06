@@ -1,31 +1,38 @@
 <html>
- <head>
-  <meta charset="UTF-8">
-  <title>Show</title>
- </head>
- <body>
-<h1>Просмотр записей в базе данных</h1>
+	<head>
+		<meta charset="UTF-8">
+		<title>Show</title>
+	</head>
+	<body>
+		<h1>Просмотр записей в базе данных</h1>
+		
+		<?php
+		require 'connect.php';
+		?>
 
-<?php
-require 'connect.php';
- 
-/* Посылаем запрос серверу */ 
-if ($result = mysqli_query($link, 'SELECT * FROM Users'))
-{ 
-	while( $row = mysqli_fetch_assoc($result) ){ 
-		echo "<pre>"."(ID: ".$row['id'].")&#9;".
-			$row['first_name']." ".
-			$row['second_name']."&#9;Возраст: ".
-			$row['age']."&#9;Дата рождения: ".
-			$row['date_of_birth']."</pre>";
-	}
-    /* Освобождаем используемую память */ 
-    mysqli_free_result($result); 
-}
- 
-/* Закрываем соединение */ 
-mysqli_close($link); 
-?>
+		<table border = "1" align = "center" cellspacing = "0" cellpadding = "25">
+			<tr>
+				<th>ID</th>
+				<th>Имя</th>
+				<th>Фамилия</th>
+				<th>Возраст</th>
+				<th>Дата рождения</th>
+			</tr>
+				<?php
+				$result = mysqli_query($link, "SELECT * FROM Users");
+				while ($row = mysqli_fetch_row($result))
+				{
+					echo "<tr>";
+					foreach($row as $cell) 
+						echo "<td>".$cell."</td>";
+					echo "</tr>";
+				}
+				?>
+		</table>
+		<?php
 
-</body>
+		/* close connection */
+		mysqli_close($link); 
+		?>
+	</body>
 </html>
