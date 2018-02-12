@@ -22,9 +22,9 @@ function load() {
         break;
       }
       for (let item of data) {
-        $("#myTable").append("<tr></tr>");
+        $("#myTable").append('<tr id = '+ item['id'] + '></tr>');
         for (key in item) {
-          $("#myTable > tbody > tr:last").append('<td>' + item[key] + '</td>');
+          $("#myTable > tbody > tr:last").append('<td id = '+ item['id']+ key +'>' + item[key] + '</td>');
         }
       }
     },
@@ -47,7 +47,12 @@ $("#create").click(function() {
       date_of_birth: $("input[name=date_of_birth]").val()
     },
     function(data) {
-      if (data == "Success") {
+      if (data['status'] == "Success") {
+        var user = data['user'];
+        $("#myTable").append('<tr id = '+user['id'] + '></tr>');
+        for (key in user) {
+          $("#myTable > tbody > tr:last").append('<td id = '+ user['id']+ key +'>' + user[key] + '</td>');
+        }
         $("#first_name").val(null);
         $("#second_name").val(null);
         $("#age").val(null);
@@ -58,8 +63,7 @@ $("#create").click(function() {
         $("span").removeClass("success");
         $("span").addClass("error");
       }
-      $("span").text(data);
-      load();
+      $("span").text(data['status']);
     },
     "json"
   );
@@ -77,6 +81,7 @@ $("#delete").click(function() {
     },
     function(data) {
       if (data == "Success") {
+        $("#myTable").find('#'+$("#id").val()+'').remove();
         $("#id").val(null);
         $("#first_name").val(null);
         $("#second_name").val(null);
@@ -89,7 +94,6 @@ $("#delete").click(function() {
         $("span").addClass("error");
       }
       $("span").text(data);
-      load();
     },
     "json"
   );
@@ -111,6 +115,11 @@ $("#update").click(function() {
     },
     function(data) {
       if (data == "Success") {
+        $("#myTable").find('#'+$("#id").val()+'id'+'').replaceWith('<td>'+$("#id").val()+'</td>');
+        $("#myTable").find('#'+$("#id").val()+'first_name'+'').replaceWith('<td>'+$("#first_name").val()+'</td>');
+        $("#myTable").find('#'+$("#id").val()+'second_name'+'').replaceWith('<td>'+$("#second_name").val()+'</td>');
+        $("#myTable").find('#'+$("#id").val()+'age'+'').replaceWith('<td>'+$("#age").val()+'</td>');
+        $("#myTable").find('#'+$("#id").val()+'date_of_birth'+'').replaceWith('<td>'+$("#date_of_birth").val()+'</td>');
         $("#id").val(null);
         $("#first_name").val(null);
         $("#second_name").val(null);
@@ -123,7 +132,6 @@ $("#update").click(function() {
         $("span").addClass("error");
       }
       $("span").text(data);
-      load();
     },
     "json"
   );

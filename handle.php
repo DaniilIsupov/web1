@@ -1,4 +1,12 @@
 <?php
+
+function get_id($link,$first_name){
+    $queryrows = "SELECT * FROM Users where first_name = '$first_name' ORDER BY id DESC LIMIT 1";
+    $result = mysqli_query($link, $queryrows) or die("Error".mysqli_error($result));
+    while($row = mysqli_fetch_assoc($result)){
+        return $row; 
+    }
+}
 /**
  * Функция добавления записи в таблицу
  * 
@@ -14,7 +22,11 @@ function create($link,$record){
         mysqli_query($link, "INSERT INTO Users(first_name, second_name, age, date_of_birth)".
         "VALUES('{$record['first_name']}', '{$record['second_name']}', '{$record['age']}',
             '{$record['date_of_birth']}');");
-        return json_encode('Success');
+        $user = ( get_id($link,$record['first_name']));
+        return json_encode(array(
+            'status' => 'Success',
+            'user'=> $user)
+        );
     }   
 }
 
@@ -41,7 +53,7 @@ function delete($link, $record){
  * @return json ответ от сервера
  */
 function get($link){
-    $queryrows = 'SELECT * FROM ' .'Users';
+    $queryrows = 'SELECT * FROM Users';
     $result = mysqli_query($link, $queryrows) or die("Error".mysqli_error($result));
     while($row = mysqli_fetch_assoc($result)){
         $data[] = $row; 
