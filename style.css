@@ -1,14 +1,14 @@
-.table {
+.table{
     border: 1px solid rgb(116, 96, 96);
     text-align: center;
     font-weight: bolder;
     border-collapse: collapse;
     float:right;
 }
-thead {
+thead{
     background-color: #4CAF50;
 }
-th {
+th{
     padding: 5px;
     text-align: center;
     vertical-align: bottom;
@@ -17,27 +17,16 @@ th {
 .col{
     border: 2px solid black;
 }
-h1 {
-    visibility: hidden
-}
-
-span {
-    padding: 0px;
-}
-
-span.error {
-    color: red;
-}
-
-span.success {
-    color: #4CAF50;
-}
 .pre-scrollable{
     max-height: 400px;
 }
-input {
-    width: 100%;
+.input-group{
+    padding: 5 5 5 5;
 }
-.header{
-    position: relative;
+.text-danger, .text-success{
+    font-weight: bold;
+    text-align: center;
+}
+.btn{
+    margin-left: 5rem;
 }

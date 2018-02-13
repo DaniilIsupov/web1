@@ -1,88 +1,197 @@
 <?php
 /**
- * Getting last user data from a user table
+ * Validation of input paramerers.
  * 
- * @param var $link идентификатор соединения
- * @return list of last user
+ * This method will call then the server accepts parameters for editing and adding record .
+ * 
+ * For example, adding new user in the table: 
+ * 
+ * ```php
+ *  $answer = chek_incorrect_input($record);
+ *  if($answer!='complete')
+ *      return  json_encode($answer);
+ *  else    
+ *      sending request to database
+ * ```
+ * 
+ * @param array $record to generate a request to database.
+ * $record contains:
+ *  First name of user
+ *  Second name of user
+ *  Age of user
+ *  Date of birth user
+ * @return string message which contains error if validation not pass or success if validation passed.
  */
-function get_last_user($link,$first_name){
-    $queryrows = "SELECT * FROM Users ORDER BY id DESC LIMIT 1";
-    $result = mysqli_query($link, $queryrows) or die("Error".mysqli_error($result));
-    if($row = mysqli_fetch_assoc($result)){
-        return $row; 
+function chek_incorrect_input($record){
+    if(!preg_match('#^\p{L}+$#u', $record['first_name']))
+        return ('First name entered incorrectly');
+    if(!preg_match('#^\p{L}+$#u', $record['second_name']))
+        return ('Second name entered incorrectly');
+    if(!preg_match('#^\d+$#',$record['age']))
+        return ('Age entered incorrectly');
+    if(!preg_match('/\d{4}-\d{2}-\d{2}/', $record['date_of_birth']))
+        return ('Date entered incorrectly');
+    return 'complete';
+}
+
+
+/**
+ * Getting the last user added.
+ * 
+ * This method will call then you need to get last user in the table.
+ * 
+ * For examlpe, to get added user (this user have the biggest id):
+ * 
+ * ```php
+ * $last_user = get_last_user($mysqli);
+ * ```
+ * @param var $mysqli object representing the connection to the MySQL server.
+ *  
+ * @return array $records last added user.
+ */
+function get_last_user($mysqli)
+{
+    $result = $mysqli->query("SELECT * FROM Users ORDER BY id DESC LIMIT 1") or
+    die("Error" . $result->error);
+    if ($records = $result->fetch_assoc()) {
+        return $records;
     }
 }
 /**
- * Create a new user in users table
+ * Create a new user in users table.
+ *
+ * This method will call when you nedd to created new user in table.
  * 
- * @param var $link идентификатор соединения
- * @param array $record ассоциативный массив
- * @return json ответ от сервера
+ * For example:
+ * 
+ * ```php
+ * $record = array(
+ *      'first_name'=>$first_name, 
+ *      'second_name'=>$second_name, 
+ *      'age'=>$age, 
+ *      'date_of_birth'=>$date_of_birth);
+ * add($mysqli, $record);
+ * ```
+ * 
+ * @param var $mysqli object representing the connection to the MySQL server.
+ * @param array $record user data array to be added to the table.
+ * 
+ * @return array $result the data array containing the status of the request and the created record.
  */
-function create($link,$record){
-    if(empty($record['first_name']) || empty($record['second_name'])||empty($record['age'])
-        ||empty($record['date_of_birth']))
+function create($mysqli, $record)
+{
+    $answer = chek_incorrect_input($record);
+    if ($answer != 'complete'){
         return json_encode(array(
-            'status' =>'Write all the fields!')
+            'status' => $answer)
         );
-    else{
-        mysqli_query($link, "INSERT INTO Users(first_name, second_name, age, date_of_birth)".
-        "VALUES('{$record['first_name']}', '{$record['second_name']}', '{$record['age']}',
-            '{$record['date_of_birth']}');");
-        $user = ( get_last_user($link,$record['first_name']));
-        return json_encode(array(
-            'status' => 'Success',
-            'user'=> $user)
-        );
-    }   
+    }
+    $mysqli->query("INSERT INTO Users(first_name, second_name, age,date_of_birth)".
+        "VALUES('{$record['first_name']}','{$record['second_name']}','{$record['age']}','{$record['date_of_birth']}');");
+    $result = json_encode(array(
+        'status' => 'Success',
+        'user' => get_last_user($mysqli))
+    );
+    return $result;
 }
 
 /**
- * Removing a user from a user Table
+ * Removing a user from a users Table
  * 
- * @param var $link идентификатор соединения
- * @param array $record ассоциативный массив
- * @return json ответ от сервера
+ * This method is called when you want to delete a user record
+ * 
+ * For example:
+ * 
+ * ```php
+ * $record = array('id'=>$id);
+ * del($mysqli, $data);
+ * ```
+ * 
+ * @param  var $mysqli object representing the connection to the MySQL server.
+ * @param array $record an array containing the user id that you want to delete
+ * @return array $result a data array containing the status of the request
  */
-function delete($link, $record){
-    $count = mysqli_query($link,"SELECT * FROM Users WHERE id = '{$record['id']}'");
-    if(mysqli_num_rows($count)!=0){
-        $q = mysqli_query($link, "DELETE FROM Users WHERE id = '{$record['id']}'");
-        return json_encode('Success');
-    }else{
-        return json_encode("record with id = '".$record['id']."' not found!");
-    }
+function delete($mysqli, $record)
+{
+    if(!preg_match('#^\d+$#',$record['id'])){
+        $result = json_encode('Id entered incorrectly');
+        return $result;
+        }
+    $count = $mysqli->query("SELECT * FROM Users WHERE id = '{$record['id']}'");
+    if (mysqli_num_rows($count) != 0) {
+        $q = $mysqli->query("DELETE FROM Users WHERE id = '{$record['id']}'");
+        $result = json_encode('Success');
+        return $result;
+    } else {
+        $result = json_encode("Record with id = '" . $record['id'] . "' not found!");
+        return $result;
+        }
 }
 /**
- * Getting user data from a user table
+ * Getting user data from a users table.
  * 
- * @param var $link идентификатор соединения
- * @return list of users
- */
-function get($link){
-    $queryrows = 'SELECT * FROM Users';
-    $result = mysqli_query($link, $queryrows) or die("Error".mysqli_error($result));
-    while($row = mysqli_fetch_assoc($result)){
-        $data[] = $row; 
-    }
-    return json_encode($data);
-}
-/**
- * Updating user data from the user table
+ * This method is called when it is necessary to get all the user data from the table users.
  * 
- * @param var $link идентификатор соединения
- * @param array $record ассоциативный массив
- * @return json ответ от сервера
+ * For example:
+ * 
+ * ```php
+ *   $all_users = display($mysqli);
+ * ```
+ * 
+ * @param var $mysqli object representing the connection to the MySQL server.
+ * @return array $records contains all records about users from the table.
  */
-function update($link, $record){
-    if(empty($record['first_name']) || empty($record['second_name'])||empty($record['age'])
-        ||empty($record['date_of_birth']))
-        return json_encode('Write all the fields!');
-    else{
-        $query = "UPDATE Users SET first_name='{$record['first_name']}',second_name='{$record['second_name']}',age='{$record['age']}', date_of_birth='{$record['date_of_birth']}' WHERE id='{$record['id']}'";
-        $q = mysqli_query($link, $query);
-        return json_encode( $q ? 'Success' : 'Does not exist!');
+function get($mysqli)
+{
+    $result = $mysqli->query('SELECT * FROM Users') or
+    die("Error" . $result->error);
+    while ($row = $result->fetch_assoc()) {
+        $records[] = $row;
     }
+    return json_encode($records);
 }
-?>
 
+/**
+ * Updating user data from the users table.
+ * 
+ * This method is called when you need to change the user's data in a table.
+ * 
+ * For example:
+ * 
+  * ```php
+ * $record = array(
+ *      'id' => $id,
+ *      'first_name' => $first_name, 
+ *      'second_name' => $second_name, 
+ *      'age' => $age, 
+ *      'date_of_birth' => $date_of_birth);
+ * update($mysqli, $record);
+ * ```
+ * 
+ * @param var $mysqli object representing the connection to the MySQL server.
+ * @param array $record user data that you want to change in the table.
+ * 
+ * @return array $result returns status of request/
+ */
+function update($mysqli, $record)
+{
+    if(!preg_match('#^\d+$#',$record['id'])){
+        $result = json_encode('Id entered incorrectly');}
+        return $result;
+    $answer = chek_incorrect_input($record);
+    if ($answer != 'complete'){
+        $result = json_encode($answer);
+        return $result;
+    } else {
+        $count = $mysqli->query("SELECT * FROM Users WHERE id = '{$record['id']}'");
+        if (mysqli_num_rows($count) != 0) {
+            $q = $mysqli->query("UPDATE Users SET first_name='{$record['first_name']}',second_name='{$record['second_name']}',age='{$record['age']}',
+                date_of_birth='{$record['date_of_birth']}' WHERE id='{$record['id']}'");
+            $result = json_encode($q ? 'Success' : 'Does not exist!');
+            return $result;
+        } else {
+            $result = json_encode("Record with id = '" . $record['id'] . "' not found!");
+            return $result;
+        }
+    }
+}

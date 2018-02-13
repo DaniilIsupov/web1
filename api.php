@@ -13,7 +13,7 @@ if (!empty($_REQUEST['act'])) {
     {
         case 'create':
             if(!empty($_POST)){
-                $answer = create($link, $_POST);
+                $answer = create($mysqli, $_POST);
             }
             else{
                 $answer = $error;
@@ -22,7 +22,7 @@ if (!empty($_REQUEST['act'])) {
             break;
         case 'get':
             if(!empty($_GET)){
-                $answer = get($link);
+                $answer = get($mysqli);
             }else{
                 $answer = $error;
             }
@@ -30,7 +30,7 @@ if (!empty($_REQUEST['act'])) {
             break;
         case 'update':
             if(!empty($_POST)){
-                $answer = update($link, $_POST);
+                $answer = update($mysqli, $_POST);
             }
             else{
                 $answer = $error;
@@ -40,7 +40,7 @@ if (!empty($_REQUEST['act'])) {
         case 'delete':
             if(!empty($_POST)){
                 
-                $answer = delete($link, $_POST);
+                $answer = delete($mysqli, $_POST);
             }
             else{
                 $answer = $error;

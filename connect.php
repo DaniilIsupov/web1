@@ -1,18 +1,12 @@
 <?php
-/** 
- *подключение базы данных
- */
 
-$link = mysqli_connect(
+$mysqli = new mysqli(
 	'127.0.0.1',
 	'root',
 	'',
 	'Users_db');
-/**
- * проверка подключения к базе данных
- */
-if (!$link) { 
-	echo "Код ошибки: ".mysqli_connect_error(); 
-	exit; 
+if ($mysqli->connect_error) {
+	die('Connection error, code  (' . $mysqli->connect_errno . ') '
+			. $mysqli->connect_error);
 }
 ?>
