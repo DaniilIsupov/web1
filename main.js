@@ -1,9 +1,7 @@
 $(document).ready(function() {
   load();
 });
-/**
- * функция отображения таблицы из бд на странице
- */
+
 function load() {
   $.get(
     "api.php",
@@ -32,9 +30,6 @@ function load() {
   );
 }
 
-/**
- *Отправка запроса к серверу на добавление записи в таблицу
- */
 $("#create").click(function() {
   $.post(
     "api.php",
@@ -69,9 +64,7 @@ $("#create").click(function() {
   );
 });
 
-/**
- *Отправка запроса к серверу на удаление записи в таблицу
- */
+
 $("#delete").click(function() {
   $.post(
     "api.php",
@@ -99,9 +92,7 @@ $("#delete").click(function() {
   );
 });
 
-/**
- *Отправка запроса к серверу на обновление записи в таблицу
- */
+
 $("#update").click(function() {
   $.post(
     "api.php",
