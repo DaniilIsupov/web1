@@ -20,13 +20,9 @@ th{
 .pre-scrollable{
     max-height: 400px;
 }
-.input-group{
-    padding: 5 5 5 5;
-}
 .text-danger, .text-success{
-    font-weight: bold;
     text-align: center;
 }
-.btn{
-    margin-left: 5rem;
+.centered{
+    justify-content: center;
 }
