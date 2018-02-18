@@ -1,10 +1,10 @@
 /**
  * This method use when DOM is fully started.
- * 
+ *
  * This function send request to server.
- * 
+ *
  * Method "get" sending request to database:
- * 
+ *
  * @param url:"api.php" - A string containing the URL to which the request is sent.
  * @param array={action=>"read"} - A plain object or string that is sent to the server with the request.
  * @param callback function(data) - A callback function that is executed if the request succeeds.
@@ -39,21 +39,29 @@ $(document).ready(function() {
     },
     "json"
   );
-});
 
+  $('a[href="#toregister"]').click(function() {
+    $("#sign_in").css("display", "none");
+    $("#sign_up").css("display", "block");
+  });
+  $('a[href="#tologin"]').click(function() {
+    $("#sign_in").css("display", "block");
+    $("#sign_up").css("display", "none");
+  });
+});
 
 /**
  * Install event click on button "create" to create record in table of users.
- * 
+ *
  * Method "post" sending request to database.
- * 
+ *
  * @param url:"api.php" - A string containing the URL to which the request is sent.
  * @param array(
- *      'first_name'=>$first_name, 
- *      'second_name'=>$second_name, 
- *      'age'=>$age, 
+ *      'first_name'=>$first_name,
+ *      'second_name'=>$second_name,
+ *      'age'=>$age,
  *      'date_of_birth'=>$date_of_birth); - A plain object or string that is sent to the server with the request.
- * @param callback function(data) A callback function that is executed if the request succeeds. 
+ * @param callback function(data) A callback function that is executed if the request succeeds.
  * @param array data - Answer of the server. The data array containing the status of the request and the created record.
  * @param string DataType - The type of data expected from the server.
  */
@@ -94,12 +102,11 @@ $("#create").click(function() {
   );
 });
 
-
 /**
  * Install event click on button "delete" to delete record in table of users.
- * 
+ *
  * Method "post" sending request to database to delete record in table of users
- * 
+ *
  * @param url:"api.php" - A string containing the URL to which the request is sent.
  * @param array('id'=>$id) - A plain object or string that is sent to the server with the request.
  * @param callback function(data) - A callback function that is executed if the request succeeds. Refreshing table
@@ -116,7 +123,8 @@ $("#delete").click(function() {
     },
     function(data) {
       if (data == "Success") {
-        $("#myTable").find("#" + $("#id").val() + "")
+        $("#myTable")
+          .find("#" + $("#id").val() + "")
           .remove();
         $("#id").val(null);
         $("#first_name").val(null);
@@ -137,17 +145,17 @@ $("#delete").click(function() {
 
 /**
  * Install event click on button "update" to update record in table of users.
- * 
+ *
  * Method "post" sending request to database to updates record in table of users
- * 
+ *
  * @param url:"api.php" A string containing the URL to which the request is sent
  * @param array=(
  *      'id'=>$id,
- *      'first_name'=>$first_name, 
- *      'second_name'=>$second_name, 
- *      'age'=>$age, 
+ *      'first_name'=>$first_name,
+ *      'second_name'=>$second_name,
+ *      'age'=>$age,
  *      'date_of_birth'=>$date_of_birth); - A plain object or string that is sent to the server with the request.
- * @param callback function(data) - A callback function that is executed if the request succeeds.This function 
+ * @param callback function(data) - A callback function that is executed if the request succeeds.This function
  * receives the status of the operation, if it is successful, it changes the data in the table on the web page.
  * @param array data - Answer of the server. Contains status of operation.
  * @param string DataType - The type of data expected from the server.
