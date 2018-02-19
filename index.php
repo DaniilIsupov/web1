@@ -100,8 +100,3 @@
 </body>
 
 </html>
-
-<!--
-<form name="signupform" id="register" class="animate row" method="post" action="addUser" novalidate="novalidate">
-
--->
