@@ -1,11 +1,10 @@
 <html>
-
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	 crossorigin="anonymous">
-	<script src="https://yastatic.net/jquery/1.6.4/jquery.min.js"></script>>
+	<script src="https://yastatic.net/jquery/1.6.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -14,6 +13,12 @@
 		if ($_SESSION["is_auth"]) {
     ?>
 		<div class="container-fluid">
+			<div class="row">
+				<form class="col-md-12" id="log_out" method="POST">
+					<label class="label label-success col-md-10">Добро пожаловать: <?php echo $_SESSION["login"] ?></label>
+					<button class="btn btn-link col-md-1" name="log_out">Log Out</button>
+				</form>
+			</div>
 			<div class="row">
 				<div class="col">
 					<form class="form-group" method="POST" action="">
@@ -97,6 +102,6 @@
 			?>
 			<div class="w-auto0"></div>
 			<script type="text/javascript" src="main.js"></script>
-</body>
+	</body>
 
 </html>
